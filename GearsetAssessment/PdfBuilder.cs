@@ -16,16 +16,21 @@ namespace GearsetAssessment
         private readonly PdfWriter writer;
         private readonly PdfDocument pdfDocument;
         public Document document { get; }
-        private PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
-        private TextAlignment alignment = TextAlignment.LEFT;
-        private readonly float INDENT_SIZE = 48f;
+        private PdfFont font;
+        private TextAlignment alignment;
+        private readonly float INDENT_SIZE;
         private int indentLevel = 0;
+        private float fontSize;
 
         public PdfBuilder(string destination)
         {
             writer = new PdfWriter(destination);
             pdfDocument = new PdfDocument(writer);
             document = new Document(pdfDocument);
+
+            INDENT_SIZE = 48f;
+            alignment = TextAlignment.LEFT;
+            font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
         }
 
         public void Write(string text)
