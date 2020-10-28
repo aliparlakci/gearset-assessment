@@ -19,18 +19,25 @@ namespace GearsetAssessment
         private PdfFont font;
         private TextAlignment alignment;
         private readonly float INDENT_SIZE;
-        private int indentLevel = 0;
+        private readonly float FONT_SIZE_MULTIPLIER;
         private float fontSize;
+        private float indentation;
 
         public PdfBuilder(string destination)
         {
+
+            FONT_SIZE_MULTIPLIER = 12;
+            fontSize = 1;
+
+            INDENT_SIZE = 48;
+            indentation = 0;
+
+            alignment = TextAlignment.LEFT;
+            font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+
             writer = new PdfWriter(destination);
             pdfDocument = new PdfDocument(writer);
             document = new Document(pdfDocument);
-
-            INDENT_SIZE = 48f;
-            alignment = TextAlignment.LEFT;
-            font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
         }
 
         public void Write(string text)
@@ -38,12 +45,27 @@ namespace GearsetAssessment
             Paragraph content = new Paragraph();
 
             content
-                .SetMarginLeft(INDENT_SIZE * indentLevel)
+                .SetMarginLeft(indentation)
                 .SetTextAlignment(alignment)
                 .SetFont(font)
+                .SetFontSize(fontSize)
                 .Add(new Text(text));
 
             document.Add(content);
+        }
+
+        public PdfBuilder Normal()
+        {
+            fontSize = FONT_SIZE_MULTIPLIER * 1;
+
+            return this;
+        }
+
+        public PdfBuilder Large()
+        {
+            fontSize = FONT_SIZE_MULTIPLIER * 2;
+
+            return this;
         }
 
         public PdfBuilder Regular()
@@ -77,6 +99,7 @@ namespace GearsetAssessment
         {
             alignment = TextAlignment.LEFT;
 
+
             return this;
         }
 
@@ -89,7 +112,7 @@ namespace GearsetAssessment
 
         public PdfBuilder Indent(int level)
         {
-            indentLevel += level;
+            indentation += INDENT_SIZE * level;
 
             return this;
         }
