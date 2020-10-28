@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Font.Constants;
@@ -23,7 +24,7 @@ namespace GearsetAssessment
         private float fontSize;
         private float indentation;
 
-        public PdfBuilder(string destination)
+        public PdfBuilder(FileStream destination)
         {
             currentParagraph = new Paragraph();
 
@@ -99,6 +100,10 @@ namespace GearsetAssessment
 
         public PdfBuilder Justify()
         {
+            // Alignment is defined for per paragraph.
+            // If alignment is changed, we need to go onto a new paragraph
+            Paragraph();
+
             alignment = TextAlignment.JUSTIFIED;
 
             return this;
@@ -106,14 +111,21 @@ namespace GearsetAssessment
 
         public PdfBuilder Left()
         {
-            alignment = TextAlignment.LEFT;
+            // Alignment is defined for per paragraph.
+            // If alignment is changed, we need to go onto a new paragraph
+            Paragraph();
 
+            alignment = TextAlignment.LEFT;
 
             return this;
         }
 
         public PdfBuilder Right()
         {
+            // Alignment is defined for per paragraph.
+            // If alignment is changed, we need to go onto a new paragraph
+            Paragraph();
+
             alignment = TextAlignment.RIGHT;
 
             return this;
@@ -122,7 +134,7 @@ namespace GearsetAssessment
         public PdfBuilder Indent(int level)
         {
 
-            // Indentation is defined for a paragraph.
+            // Indentation is defined for per paragraph.
             // If indentation is changed, we need to go onto a new paragraph
             Paragraph();
 
@@ -133,8 +145,14 @@ namespace GearsetAssessment
 
         private void WriteParagraphToDocument()
         {
-            currentParagraph.SetMarginLeft(indentation);
-            document.Add(currentParagraph);
+            currentParagraph
+                .SetMarginLeft(indentation)
+                .SetTextAlignment(alignment);
+
+            if (!currentParagraph.IsEmpty())
+            {
+                document.Add(currentParagraph);
+            }
         }
 
         public void Dispose()
