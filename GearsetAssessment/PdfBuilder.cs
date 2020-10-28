@@ -7,6 +7,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 
 namespace GearsetAssessment
 {
@@ -14,9 +15,11 @@ namespace GearsetAssessment
     {
         private readonly PdfWriter writer;
         private readonly PdfDocument pdfDocument;
-        private readonly Document document;
-
-        private PdfFont font;
+        public Document document { get; }
+        private PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+        private TextAlignment alignment = TextAlignment.LEFT;
+        private readonly float INDENT_SIZE = 48f;
+        private int indentLevel = 0;
 
         public PdfBuilder(string destination)
         {
@@ -25,14 +28,17 @@ namespace GearsetAssessment
             document = new Document(pdfDocument);
         }
 
-        public PdfBuilder Write(string text)
+        public void Write(string text)
         {
-            Paragraph content = new Paragraph(text);
-            content.SetFont(font);
+            Paragraph content = new Paragraph();
+
+            content
+                .SetMarginLeft(INDENT_SIZE * indentLevel)
+                .SetTextAlignment(alignment)
+                .SetFont(font)
+                .Add(new Text(text));
 
             document.Add(content);
-
-            return this;
         }
 
         public PdfBuilder Regular()
@@ -45,13 +51,40 @@ namespace GearsetAssessment
         public PdfBuilder Italic()
         {
             font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_OBLIQUE);
-
             return this;
         }
 
         public PdfBuilder Bold()
         {
             font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+
+            return this;
+        }
+
+        public PdfBuilder Justify()
+        {
+            alignment = TextAlignment.JUSTIFIED;
+
+            return this;
+        }
+
+        public PdfBuilder Left()
+        {
+            alignment = TextAlignment.LEFT;
+
+            return this;
+        }
+
+        public PdfBuilder Right()
+        {
+            alignment = TextAlignment.RIGHT;
+
+            return this;
+        }
+
+        public PdfBuilder Indent(int level)
+        {
+            indentLevel += level;
 
             return this;
         }
