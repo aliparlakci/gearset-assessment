@@ -8,18 +8,17 @@ namespace GearsetAssessment
     {
         static void Main(string[] args)
         {
-            string dest = "C:\\Users\\Ali\\Desktop\\pdf.pdf";
-            string inputPath = "C:\\Users\\Ali\\Desktop\\input.txt";
+            string outputPath = "output.pdf";
+            string inputPath = args[0];
 
             using FileStream inputFileStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read);
             using StreamReader streamReader = new StreamReader(inputFileStream);
 
-            using FileStream outputFileStream = new FileStream(dest, FileMode.Create, FileAccess.Write);
-
-            string line = String.Empty;
+            using FileStream outputFileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
 
             using PdfBuilder pdfBuilder = new PdfBuilder(outputFileStream);
 
+            string line = String.Empty;
             while ((line = streamReader.ReadLine()) != null)
             {
                 if (line.StartsWith(".paragraph"))
