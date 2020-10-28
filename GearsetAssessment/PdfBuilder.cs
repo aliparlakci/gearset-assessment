@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -16,6 +15,7 @@ namespace GearsetAssessment
         private readonly PdfWriter writer;
         private readonly PdfDocument pdfDocument;
         public Document document { get; }
+        private Paragraph currentParagraph;
         private PdfFont font;
         private TextAlignment alignment;
         private readonly float INDENT_SIZE;
@@ -25,6 +25,7 @@ namespace GearsetAssessment
 
         public PdfBuilder(string destination)
         {
+            currentParagraph = new Paragraph();
 
             FONT_SIZE_MULTIPLIER = 12;
             fontSize = 1;
@@ -40,18 +41,26 @@ namespace GearsetAssessment
             document = new Document(pdfDocument);
         }
 
-        public void Write(string text)
+        public PdfBuilder Paragraph()
         {
-            Paragraph content = new Paragraph();
+            // Write the latest paragraph to document
+            // create a new paragraph
+            WriteParagraphToDocument();
 
+            currentParagraph = new Paragraph();
+
+            return this;
+        }
+
+        public void AddText(string text)
+        {
+            Text content = new Text(text);
             content
-                .SetMarginLeft(indentation)
                 .SetTextAlignment(alignment)
                 .SetFont(font)
-                .SetFontSize(fontSize)
-                .Add(new Text(text));
+                .SetFontSize(fontSize);
 
-            document.Add(content);
+            currentParagraph.Add(content);
         }
 
         public PdfBuilder Normal()
@@ -112,13 +121,25 @@ namespace GearsetAssessment
 
         public PdfBuilder Indent(int level)
         {
+
+            // Indentation is defined for a paragraph.
+            // If indentation is changed, we need to go onto a new paragraph
+            Paragraph();
+
             indentation += INDENT_SIZE * level;
 
             return this;
         }
 
+        private void WriteParagraphToDocument()
+        {
+            currentParagraph.SetMarginLeft(indentation);
+            document.Add(currentParagraph);
+        }
+
         public void Dispose()
         {
+            WriteParagraphToDocument();
             document.Close();
         }
     }
