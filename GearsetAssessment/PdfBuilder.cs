@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Text;
 using iText.IO.Font.Constants;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -24,7 +22,7 @@ namespace GearsetAssessment
         private float fontSize;
         private float indentation;
 
-        public PdfBuilder(FileStream destination)
+        public PdfBuilder(Stream destination)
         {
             currentParagraph = new Paragraph();
 
@@ -53,7 +51,7 @@ namespace GearsetAssessment
             return this;
         }
 
-        public void AddText(string text)
+        public PdfBuilder AddText(string text)
         {
             Text content = new Text(text);
             content
@@ -62,6 +60,7 @@ namespace GearsetAssessment
                 .SetFontSize(fontSize);
 
             currentParagraph.Add(content);
+            return this;
         }
 
         public PdfBuilder Normal()
@@ -131,7 +130,7 @@ namespace GearsetAssessment
             return this;
         }
 
-        public PdfBuilder Indent(int level)
+        public PdfBuilder Indent(float level)
         {
 
             // Indentation is defined for per paragraph.

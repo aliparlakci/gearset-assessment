@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 
 namespace GearsetAssessment
 {
@@ -21,49 +20,8 @@ namespace GearsetAssessment
             string line = String.Empty;
             while ((line = streamReader.ReadLine()) != null)
             {
-                if (line.StartsWith(".paragraph"))
-                {
-                    pdfBuilder.Paragraph();
-                }
-                if (line.StartsWith(".normal"))
-                {
-                    pdfBuilder.Normal();
-                }
-                if (line.StartsWith(".large"))
-                {
-                    pdfBuilder.Large();
-                }
-                if (line.StartsWith(".regular"))
-                {
-                    pdfBuilder.Regular();
-                }
-                if (line.StartsWith(".bold"))
-                {
-                    pdfBuilder.Bold();
-                }
-                if (line.StartsWith(".italic"))
-                {
-                    pdfBuilder.Italic();
-                }
-                if (line.StartsWith(".fill"))
-                {
-                    pdfBuilder.Justify();
-                }
-                if (line.StartsWith(".nofill"))
-                {
-                    pdfBuilder.Left();
-                }
-                if (line.StartsWith(".indent"))
-                {
-                    var indent = line.Split(" ")[1];
-                    pdfBuilder.Indent(Int32.Parse(indent));
-                }
-                if (!line.StartsWith("."))
-                {
-                    pdfBuilder.AddText(line);
-                }
+                CommandParser.ExtractMethod(line, pdfBuilder)();
             }
-
         }
     }
 }
