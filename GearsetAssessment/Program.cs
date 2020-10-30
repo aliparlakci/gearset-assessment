@@ -7,8 +7,16 @@ namespace GearsetAssessment
     {
         static void Main(string[] args)
         {
+            string inputPath;
+            try
+            {
+                inputPath = args[0];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new InvalidArgumentException("Path to an input file is not provided");
+            }
             string outputPath = "output.pdf";
-            string inputPath = args[0];
 
             using FileStream inputFileStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read);
             using StreamReader streamReader = new StreamReader(inputFileStream);

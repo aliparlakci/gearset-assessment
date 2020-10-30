@@ -9,7 +9,7 @@ using iText.Layout.Properties;
 
 namespace GearsetAssessment
 {
-    class PdfBuilder : IDisposable
+    public class PdfBuilder : IDisposable
     {
         private readonly PdfWriter writer;
         private readonly PdfDocument pdfDocument;
@@ -24,8 +24,6 @@ namespace GearsetAssessment
 
         public PdfBuilder(Stream destination)
         {
-            currentParagraph = new Paragraph();
-
             FONT_SIZE_MULTIPLIER = 12;
             fontSize = 1;
 
@@ -42,9 +40,13 @@ namespace GearsetAssessment
 
         public PdfBuilder Paragraph()
         {
-            // Write the latest paragraph to document
-            // create a new paragraph
-            WriteParagraphToDocument();
+            // Do not try to add paragraph to document
+            // if no paragraph has been created, yet
+            if (currentParagraph != null)
+            {
+                // Add the previous paragraph to document
+                WriteParagraphToDocument();
+            }
 
             currentParagraph = new Paragraph();
 
@@ -55,10 +57,15 @@ namespace GearsetAssessment
         {
             Text content = new Text(text);
             content
-                .SetTextAlignment(alignment)
                 .SetFont(font)
                 .SetFontSize(fontSize);
 
+            // If Paragraph() has not been called for at least once
+            // create a new Paragraph
+            if (currentParagraph == null)
+            {
+                currentParagraph = new Paragraph();
+            }
             currentParagraph.Add(content);
             return this;
         }
@@ -101,7 +108,6 @@ namespace GearsetAssessment
         {
             // Alignment is defined for per paragraph.
             // If alignment is changed, we need to go onto a new paragraph
-            Paragraph();
 
             alignment = TextAlignment.JUSTIFIED;
 
@@ -112,7 +118,6 @@ namespace GearsetAssessment
         {
             // Alignment is defined for per paragraph.
             // If alignment is changed, we need to go onto a new paragraph
-            Paragraph();
 
             alignment = TextAlignment.LEFT;
 
@@ -123,7 +128,6 @@ namespace GearsetAssessment
         {
             // Alignment is defined for per paragraph.
             // If alignment is changed, we need to go onto a new paragraph
-            Paragraph();
 
             alignment = TextAlignment.RIGHT;
 
@@ -132,26 +136,33 @@ namespace GearsetAssessment
 
         public PdfBuilder Indent(float level)
         {
-
             // Indentation is defined for per paragraph.
             // If indentation is changed, we need to go onto a new paragraph
             Paragraph();
 
             indentation += INDENT_SIZE * level;
+            currentParagraph.SetMarginLeft(indentation);
 
             return this;
         }
 
+        public Paragraph GetParagraph()
+        {
+            ApplyStylingToParagraph();
+            return currentParagraph;
+        }
+
         private void WriteParagraphToDocument()
+        {
+            ApplyStylingToParagraph();
+            document.Add(currentParagraph);
+        }
+
+        private void ApplyStylingToParagraph()
         {
             currentParagraph
                 .SetMarginLeft(indentation)
                 .SetTextAlignment(alignment);
-
-            if (!currentParagraph.IsEmpty())
-            {
-                document.Add(currentParagraph);
-            }
         }
 
         public void Dispose()
