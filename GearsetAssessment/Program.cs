@@ -23,7 +23,7 @@ namespace GearsetAssessment
 
             using FileStream outputFileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
 
-            using PdfBuilder pdfBuilder = new PdfBuilder(outputFileStream);
+            using IPdfBuilder pdfBuilder = new PdfBuilder(outputFileStream);
 
             string line = String.Empty;
             while ((line = streamReader.ReadLine()) != null)

@@ -9,7 +9,7 @@ using iText.Layout.Properties;
 
 namespace GearsetAssessment
 {
-    public class PdfBuilder : IDisposable
+    public class PdfBuilder : IPdfBuilder
     {
         private readonly PdfWriter writer;
         private readonly PdfDocument pdfDocument;
@@ -38,7 +38,7 @@ namespace GearsetAssessment
             document = new Document(pdfDocument);
         }
 
-        public PdfBuilder Paragraph()
+        public IPdfBuilder Paragraph()
         {
             // Do not try to add paragraph to document
             // if no paragraph has been created, yet
@@ -53,7 +53,7 @@ namespace GearsetAssessment
             return this;
         }
 
-        public PdfBuilder AddText(string text)
+        public IPdfBuilder AddText(string text)
         {
             Text content = new Text(text);
             content
@@ -70,41 +70,41 @@ namespace GearsetAssessment
             return this;
         }
 
-        public PdfBuilder Normal()
+        public IPdfBuilder Normal()
         {
             fontSize = FONT_SIZE_MULTIPLIER * 1;
 
             return this;
         }
 
-        public PdfBuilder Large()
+        public IPdfBuilder Large()
         {
             fontSize = FONT_SIZE_MULTIPLIER * 2;
 
             return this;
         }
 
-        public PdfBuilder Regular()
+        public IPdfBuilder Regular()
         {
             font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
 
             return this;
         }
 
-        public PdfBuilder Italic()
+        public IPdfBuilder Italic()
         {
             font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_OBLIQUE);
             return this;
         }
 
-        public PdfBuilder Bold()
+        public IPdfBuilder Bold()
         {
             font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
 
             return this;
         }
 
-        public PdfBuilder Justify()
+        public IPdfBuilder Justify()
         {
             // Alignment is defined for per paragraph.
             // If alignment is changed, we need to go onto a new paragraph
@@ -114,7 +114,7 @@ namespace GearsetAssessment
             return this;
         }
 
-        public PdfBuilder Left()
+        public IPdfBuilder Left()
         {
             // Alignment is defined for per paragraph.
             // If alignment is changed, we need to go onto a new paragraph
@@ -124,7 +124,7 @@ namespace GearsetAssessment
             return this;
         }
 
-        public PdfBuilder Right()
+        public IPdfBuilder Right()
         {
             // Alignment is defined for per paragraph.
             // If alignment is changed, we need to go onto a new paragraph
@@ -134,7 +134,7 @@ namespace GearsetAssessment
             return this;
         }
 
-        public PdfBuilder Indent(float level)
+        public IPdfBuilder Indent(float level)
         {
             // Indentation is defined for per paragraph.
             // If indentation is changed, we need to go onto a new paragraph

@@ -2,9 +2,9 @@ using System;
 
 namespace GearsetAssessment
 {
-    static class CommandParser
+    public static class CommandParser
     {
-        public static Func<PdfBuilder> ExtractMethod(string command, PdfBuilder builder)
+        public static Func<IPdfBuilder> ExtractMethod(string command, IPdfBuilder builder)
         {
             if (command.StartsWith(".paragraph"))
             {

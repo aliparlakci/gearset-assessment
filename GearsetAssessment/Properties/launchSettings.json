@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "GearsetAssessment": {
-      "commandName": "Project",
-      "commandLineArgs": "input.txt",
-      "workingDirectory": "C:\\Users\\Ali\\source\\repos\\GearsetAssessment\\GearsetAssessment"
-    }
-  }
-}
