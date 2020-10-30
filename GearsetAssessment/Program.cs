@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using GearsetAssessment.Exceptions;
 
 namespace GearsetAssessment
 {
@@ -30,6 +31,7 @@ namespace GearsetAssessment
             {
                 CommandParser.ExtractMethod(line, pdfBuilder)();
             }
+            Console.WriteLine($"{outputPath} file is succesfully created on the current directory!");
         }
     }
 }
