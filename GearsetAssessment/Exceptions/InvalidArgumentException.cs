@@ -1,6 +1,6 @@
 using System;
 
-namespace GearsetAssessment
+namespace GearsetAssessment.Exceptions
 {
     public class InvalidArgumentException : Exception
     {

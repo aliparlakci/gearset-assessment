@@ -1,5 +1,6 @@
 ﻿using Moq;
 using Xunit;
+using GearsetAssessment.Exceptions;
 
 namespace GearsetAssessment.Test
 {
@@ -11,7 +12,7 @@ namespace GearsetAssessment.Test
         {
             MockedBuilder = new Mock<IPdfBuilder>();
         }
-        
+
         [Fact]
         public void Paragraph()
         {
@@ -41,7 +42,7 @@ namespace GearsetAssessment.Test
             CommandParser.ExtractMethod(".regular", MockedBuilder.Object)();
             MockedBuilder.Verify(mock => mock.Regular(), Times.Once());
         }
-                
+
         [Fact]
         public void Bold()
         {
